@@ -167,42 +167,52 @@ config_dict = configobj.ConfigObj(StringIO(extension_config))
 files=[('bin/user', ['bin/user/belchertown.py'
                     ]
         ),
-       ('skins/Belchertown', ['skins/Belchertown/favicon.ico',
-                              'skins/Belchertown/footer.html.tmpl',
-                              'skins/Belchertown/header.html.tmpl',
-                              'skins/Belchertown/index.html.tmpl',
+       ('skins/Belchertown', ['skins/Belchertown/about.inc',
                               'skins/Belchertown/about.inc.example',
-                              'skins/Belchertown/celestial.inc',
-                              'skins/Belchertown/graphs.conf.example',
-                              'skins/Belchertown/page-header.inc',
-                              'skins/Belchertown/manifest.json.tmpl',
-                              'skins/Belchertown/records.inc.example',
-                              'skins/Belchertown/records-table.inc.example',
-                              'skins/Belchertown/robots.txt',
-                              'skins/Belchertown/skin.conf',
+                              'skins/Belchertown/allsky.conf',
+                              'skins/Belchertown/allsky.inc',
                               'skins/Belchertown/belchertown-dark.min.css',
-                              'skins/Belchertown/style.css'
+                              'skins/Belchertown/celestial.inc',
+                              'skins/Belchertown/custom.css',
+                              'skins/Belchertown/custom.min.css',
+                              'skins/Belchertown/favicon.ico',
+                              'skins/Belchertown/footer.html.tmpl',
+                              'skins/Belchertown/forecast.inc',
+                              'skins/Belchertown/getdata.php',
+                              'skins/Belchertown/graphs.conf',
+                              'skins/Belchertown/graphs.conf.example',
+                              'skins/Belchertown/header.html.tmpl',
+                              'skins/Belchertown/imprint.inc',
+                              'skins/Belchertown/index.html.tmpl',
+                              'skins/Belchertown/index_hook_after_temp_table.inc',
+                              'skins/Belchertown/index_radar.inc',
+                              'skins/Belchertown/index_radar.inc.example',
+                              'skins/Belchertown/kiosk.css',
+                              'skins/Belchertown/kiosk.html.tmpl',
+                              'skins/Belchertown/manifest.json.tmpl',
+                              'skins/Belchertown/meteogram.v2.0.min.css',
+                              'skins/Belchertown/meteogram.v2.0.min.js',
+                              'skins/Belchertown/page-header.inc',
+                              'skins/Belchertown/privacy.inc',
+                              'skins/Belchertown/records-table.inc.example',
+                              'skins/Belchertown/records.inc.example',
+                              'skins/Belchertown/robots.txt',
+                              'skins/Belchertown/sitemap.xml',
+                              'skins/Belchertown/skin.conf',
+                              'skins/Belchertown/style.css',
+                              'skins/Belchertown/style.min.css',
+                              'skins/Belchertown/webcam.inc'
                              ]
         ),
        ('skins/Belchertown/about', ['skins/Belchertown/about/index.html.tmpl']),
+       ('skins/Belchertown/allsky', ['skins/Belchertown/allsky/index.html.tmpl']),
+       ('skins/Belchertown/dwd', ['skins/Belchertown/dwd/index.html']),
+       ('skins/Belchertown/forecast', ['skins/Belchertown/forecast/index.html']),
        ('skins/Belchertown/graphs', ['skins/Belchertown/graphs/index.html.tmpl']),
-       ('skins/Belchertown/NOAA', ['skins/Belchertown/NOAA/NOAA-YYYY-MM.txt.tmpl',
-                                   'skins/Belchertown/NOAA/NOAA-YYYY.txt.tmpl'
-                                  ]
-        ),
-       ('skins/Belchertown/pi', ['skins/Belchertown/pi/index.html.tmpl']),
-       ('skins/Belchertown/records', ['skins/Belchertown/records/index.html.tmpl']),
-       ('skins/Belchertown/reports', ['skins/Belchertown/reports/index.html.tmpl']),
-       ('skins/Belchertown/js', ['skins/Belchertown/js/belchertown.js.tmpl',
-                                 'skins/Belchertown/js/index.html',
-                                 'skins/Belchertown/js/responsive-menu.js'
-                                ]
-        ),
-       ('skins/Belchertown/json', ['skins/Belchertown/json/index.html',
-                                   'skins/Belchertown/json/weewx_data.json.tmpl'
-                                  ]
-        ),
-       ('skins/Belchertown/images', ['skins/Belchertown/images/clear-day.png',
+       ('skins/Belchertown/images', ['skins/Belchertown/images/airRohr_SDS011.jpg',
+                                     'skins/Belchertown/images/Allsky_Kamera_1.jpg',
+                                     'skins/Belchertown/images/Allsky_Kamera_2.jpg',
+                                     'skins/Belchertown/images/clear-day.png',
                                      'skins/Belchertown/images/clear-night.png',
                                      'skins/Belchertown/images/cloudy.png',
                                      'skins/Belchertown/images/fog.png',
@@ -218,6 +228,7 @@ files=[('bin/user', ['bin/user/belchertown.py'
                                      'skins/Belchertown/images/snow.png',
                                      'skins/Belchertown/images/snowflake-icon-15px.png',
                                      'skins/Belchertown/images/station.png',
+                                     'skins/Belchertown/images/station-logo.png',
                                      'skins/Belchertown/images/station48.png',
                                      'skins/Belchertown/images/station72.png',
                                      'skins/Belchertown/images/station96.png',
@@ -229,12 +240,40 @@ files=[('bin/user', ['bin/user/belchertown.py'
                                      'skins/Belchertown/images/thunderstorm.png',
                                      'skins/Belchertown/images/tornado.png',
                                      'skins/Belchertown/images/unknown.png',
+                                     'skins/Belchertown/images/website.png',
+                                     'skins/Belchertown/images/Wetterstation_Sainlogic.jpg',
+                                     'skins/Belchertown/images/Wetterstation_Solar.jpg',
+                                     'skins/Belchertown/images/Wetterstation_Webcam.jpg',
                                      'skins/Belchertown/images/wind.png',
                                      'skins/Belchertown/images/windy.png',
                                      'skins/Belchertown/images/index.html',
-                                     'skins/Belchertown/images/aeris-icon-list.json'                                    
+                                     'skins/Belchertown/images/aeris-icon-list.json'
                                     ]
-        )
+        ),
+       ('skins/Belchertown/imprint', ['skins/Belchertown/imprint/index.html.tmpl']),
+       ('skins/Belchertown/js', ['skins/Belchertown/js/belchertown.js.tmpl',
+                                 'skins/Belchertown/js/index.html',
+                                 'skins/Belchertown/js/responsive-menu.js'
+                                ]
+        ),
+       ('skins/Belchertown/json', ['skins/Belchertown/json/index.html',
+                                   'skins/Belchertown/json/weewx_data.json.tmpl'
+                                  ]
+        ),
+       ('skins/Belchertown/lang', ['skins/Belchertown/lang/de.conf',
+                                   'skins/Belchertown/lang/en.conf',
+                                   'skins/Belchertown/lang/index.html'
+                                  ]
+        ),
+       ('skins/Belchertown/NOAA', ['skins/Belchertown/NOAA/NOAA-YYYY-MM.txt.tmpl',
+                                   'skins/Belchertown/NOAA/NOAA-YYYY.txt.tmpl'
+                                  ]
+        ),
+       ('skins/Belchertown/pi', ['skins/Belchertown/pi/index.html.tmpl']),
+       ('skins/Belchertown/privacy', ['skins/Belchertown/privacy/index.html.tmpl']),
+       ('skins/Belchertown/records', ['skins/Belchertown/records/index.html.tmpl']),
+       ('skins/Belchertown/reports', ['skins/Belchertown/reports/index.html.tmpl']),
+       ('skins/Belchertown/webcam', ['skins/Belchertown/webcam/index.html.tmpl'])
 ]
 files_dict = files
 
