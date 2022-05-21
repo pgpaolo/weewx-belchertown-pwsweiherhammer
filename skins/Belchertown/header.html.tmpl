@@ -26,45 +26,95 @@
         #end if
 #end if
 
-## Setup the header labels, setting a default if not defined
-#if $obs.label.html_title == "" 
-#set $head_title = $station.location + " Weather Conditions"
+#if $obs.label.html_title != "" 
+    #if $page == "home"
+        #set $head_title = $obs.label.html_title
+    #else if $page == "forecast"
+        #set $head_title = $obs.label.html_title_forecast
+    #else if $page == "graphs"
+        #set $head_title = $obs.label.html_title_graphs
+    #else if $page == "records"
+        #set $head_title = $obs.label.html_title_records
+    #else if $page == "reports"
+        #set $head_title = $obs.label.html_title_reports
+    #else if $page == "about"
+        #set $head_title = $obs.label.html_title_about
+    #else if $page == "webcam"
+        #set $head_title = $obs.label.html_title_webcam
+    #else if $page == "imprint"
+        #set $head_title = $obs.label.html_title_imprint
+    #else if $page == "privacy"
+        #set $head_title = $obs.label.html_title_privacy
+    #else
+        #set $head_title = $obs.label.html_title
+    #end if
 #else
-#set $head_title = $obs.label.html_title
+    #set $head_title = "Das Wetter in Weiherhammer aktuell"
 #end if
 
-#if $obs.label.html_description == "" 
-#set $head_desc = "Weather conditions for " + $station.location + " as observed by a personal weather station and the weewx weather software"
+#if $obs.label.html_description != "" 
+    #if $page == "home"
+        #set $head_desc = $obs.label.html_description
+    #else if $page == "forecast"
+        #set $head_desc = $obs.label.html_description_forecast
+    #else if $page == "graphs"
+        #set $head_desc = $obs.label.html_description_graphs
+    #else if $page == "records"
+        #set $head_desc = $obs.label.html_description_records
+    #else if $page == "reports"
+        #set $head_desc = $obs.label.html_description_reports
+    #else if $page == "about"
+        #set $head_desc = $obs.label.html_description_about
+    #else if $page == "webcam"
+        #set $head_desc = $obs.label.html_description_webcam
+    #else if $page == "imprint"
+        #set $head_desc = $obs.label.html_description_imprint
+    #else if $page == "privacy"
+        #set $head_desc = $obs.label.html_description_privacy
+    #else
+        #set $head_desc = $obs.label.html_description
+    #end if
 #else
-#set $head_desc = $obs.label.html_description
+    #set $head_desc = "Aktuelles Wetter, Wetterwarnungen sowie Wetterverl&auml;e in 92729 Weiherhammer (Bayern, Deutschland) und Umgebung."
 #end if
 
 ## Setup the relative URLs. Use . for homepage and .. for anything in a subfolder. 
 #if $page == "home" or $page == "kiosk"
 #set global $relative_url = "."
+#set $pws_url = $station.station_url
 #else
 #set global $relative_url = ".."
+#set $pws_url = $station.station_url + "/" + $page + "/"
 #end if
 
 
 <!DOCTYPE html>
-<html lang="$system_locale_js" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+##<html lang="$system_locale_js" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+<html lang="de" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
     <head >
-        <meta charset="UTF-8" />
+        ##<meta charset="UTF-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>$head_title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <meta name="description" content="$head_desc"/>
-        <meta name="robots" content="noodp"/>
+        <meta name="robots" content="index, follow, noodp"/>
         #if $station.station_url
-        <link rel="canonical" href="$station.station_url" />
+        <link rel="canonical" href="$pws_url" />
         #end if
         <meta property="og:locale" content="$system_locale" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="$head_title" />
         <meta property="og:description" content="$head_desc" />
         #if $station.station_url
-        <meta property="og:url" content="$station.station_url" />
+        <meta property="og:url" content="$pws_url" />
+        #if $page == "home-deactivated"
+        <meta property="og:image" content="$station.station_url/images/website.jpg" />
+        <link itemprop="thumbnailUrl" href="$station.station_url/images/website.jpg">
+        <meta property="og:image:type" content="image/jpeg">
+        <meta property="og:image:width" content="341" /> 
+        <meta property="og:image:height" content="300" />
+        #end if
         #end if
         <meta property="og:site_name" content="$head_title" />
 
@@ -79,8 +129,8 @@
         <link rel='stylesheet' href='//stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' type='text/css' media='all' />
         <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css?ver=4.7.4' type='text/css' media='all' />
         <link rel='stylesheet' href='//stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css' type='text/css' media='all' />
-        <link rel='stylesheet' href='$relative_url/style.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownStyle" />
-        <link rel='stylesheet' href='$relative_url/belchertown-dark.min.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownStyle" />
+        <link rel='stylesheet' href='$relative_url/style.min.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownStyle" />
+        <link rel='stylesheet' href='$relative_url/belchertown-dark.min.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownDarkStyle" />
         #if $page == "kiosk"
         <link rel='stylesheet' href='$relative_url/kiosk.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownCustomStyle" />
         #end if
@@ -88,6 +138,13 @@
         <link rel='stylesheet' href='$relative_url/custom.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownCustomStyle" />
         #end if
 
+        #if $page == "forecast"
+        <!-- Forecast Page - add wind icon css -->
+        <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons-wind.min.css' type='text/css' media='all' />
+        ##<!-- Forecast Page - add DWD Meteogramm Stylesheet -->
+        ##<link rel='stylesheet' href='$relative_url/meteogram.v2.0.min.css' type='text/css' media='all' id="meteogrammcss" />
+        #end if
+        
         <link rel="manifest" href="$relative_url/manifest.json" crossorigin="use-credentials">
         <link rel="apple-touch-icon" href="$relative_url/images/station.png">
         <link rel="apple-touch-icon" sizes="48x48" href="$relative_url/images/station48.png">
@@ -172,9 +229,9 @@
                         <p class="site-title" itemprop="headline">
                             <a href="$relative_url/">
                                 #if $Extras.has_key("logo_image_dark") and $Extras.logo_image_dark != '' and $bodyTheme == "dark"
-                                <img src="$Extras.logo_image_dark" id="logo_image" title="$head_title" alt="$head_title">
+                                <img src="$relative_url/images/$Extras.logo_image_dark" id="logo_image" title="$head_title" alt="$head_title">
                                 #elif $Extras.has_key("logo_image") and $Extras.logo_image != ''
-                                <img src="$Extras.logo_image" id="logo_image" title="$head_title" alt="$head_title">
+                                <img src="$relative_url/images/$Extras.logo_image" id="logo_image" title="$head_title" alt="$head_title">
                                 #else if $Extras.has_key("site_title") and $Extras.site_title != ''
                                 $Extras.site_title
                                 #end if
@@ -188,6 +245,9 @@
                                     <ul id="menu-menu" class="menu genesis-nav-menu">
                                         <!-- class = current-menu-item -->
                                         <li class="menu-item menu-item-home"><a href="$relative_url" itemprop="url"><span itemprop="name">$obs.label.nav_home</span></a></li>
+                                        #if $Extras.has_key("forecast_enabled") and $Extras.forecast_enabled == '1'
+                                        <li class="menu-item menu-item-forecast"><a href="$relative_url/forecast" itemprop="url"><span itemprop="name">$obs.label.nav_forecast</span></a></li>
+                                        #end if
                                         #if $Extras.has_key('highcharts_enabled') and $Extras.highcharts_enabled == '1'
                                         <li class="menu-item menu-item-1"><a href="$relative_url/graphs" itemprop="url"><span itemprop="name">$obs.label.nav_graphs</span></a></li>
                                         #end if

@@ -7,7 +7,7 @@
 #set global $hemisphere = "northern-hemisphere"
 #end if
 
-var pages = ["graphs", "records", "reports", "about", "pi"];
+var pages = ["graphs", "records", "reports", "about", "pi", "webcam", "imprint", "privacy", "forecast"];
 var pageName = "";
 // If this page we're on now is listed as a subpage, use ".." to get to the relative root
 function get_relative_url() {
@@ -228,6 +228,44 @@ function get_aqi_color(aqi, returnColor = false) {
     } else {
         jQuery(".aqi_outer").css("color", aqi_color);
     }
+}
+
+// Change the color of the aqi variable according to Umweltbundesamt standards
+function change_aqi_color(aqi_category, container=".pws_aqi_outer", property="color") {
+    aqi_category = parseFloat(aqi_category).toFixed(0);
+    if (aqi_category >= 4) {
+        var aqi_color = "#960032";
+    } else if (aqi_category == 3) {
+        var aqi_color = "#FF5050";
+    } else if (aqi_category == 2) {
+        var aqi_color = "#F0E641";
+    } else if (aqi_category == 1) {
+        var aqi_color = "#50CDAA";
+    } else if (aqi_category == 0) {
+        var aqi_color = "#50F0E6";
+    } else {
+        var aqi_color = "#333";
+    }
+    jQuery(container).css(property, aqi_color);
+}
+
+// Change the label of the aqi variable according to Umweltbundesamt standards
+function change_aqi_label(aqi_category, container=".pws-aqi-category") {
+    aqi_category = parseFloat(aqi_category).toFixed(0);
+    if (aqi_category >= 4) {
+        var aqi_label = "$obs.label.pws_aqi_very_poor";
+    } else if (aqi_category == 3) {
+        var aqi_label = "$obs.label.pws_aqi_poor";
+    } else if (aqi_category == 2) {
+        var aqi_label = "$obs.label.pws_aqi_moderate";
+    } else if (aqi_category == 1) {
+        var aqi_label = "$obs.label.pws_aqi_good";
+    } else if (aqi_category == 0) {
+        var aqi_label = "$obs.label.pws_aqi_very_good";
+    } else {
+        var aqi_label = "$obs.label.pws_aqi_unknown";
+    }
+    jQuery(container).html(aqi_label);
 }
 
 function get_gauge_color(value, options) {
@@ -568,7 +606,7 @@ function changeTheme(themeName, toggleOverride = false) {
         #end if
         #if $Extras.has_key('logo_image_dark') and $Extras.logo_image_dark != ""
         belchertown_debug("Theme: logo_image_dark is defined.");
-        jQuery("#logo_image").attr("src", "$Extras.logo_image_dark");
+        jQuery("#logo_image").attr("src", get_relative_url() + "/images/$Extras.logo_image_dark");
         #end if
         sessionStorage.setItem('currentTheme', 'dark');
     } else if (themeName == "light") {
@@ -583,7 +621,7 @@ function changeTheme(themeName, toggleOverride = false) {
         #end if
         #if $Extras.has_key('logo_image') and $Extras.logo_image != ""
         belchertown_debug("Theme: logo_image is defined.");
-        jQuery("#logo_image").attr("src", "$Extras.logo_image");
+        jQuery("#logo_image").attr("src", get_relative_url() + "/images/$Extras.logo_image");
         #end if
         sessionStorage.setItem('currentTheme', 'light');
     }
@@ -684,6 +722,13 @@ function update_weewx_data(data) {
         // Returned "current" data does not have this value
     }
     #end if
+
+    // PWS Airquality
+    change_aqi_color(data["current"]["pws_aqi_category"], ".pws-aqi-category");
+    change_aqi_color(data["current"]["pws_aqi_pm2_5_category"], ".pws_aqi_pm2_5_dot", "background-color");
+    change_aqi_color(data["current"]["pws_aqi_pm10_0_category"], ".pws_aqi_pm10_0_dot", "background-color");
+    change_aqi_color(data["current"]["pws_aqi_o3_category"], ".pws_aqi_o3_dot", "background-color");
+    change_aqi_color(data["current"]["pws_aqi_no2_category"], ".pws_aqi_no2_dot", "background-color");
 }
 
 //  function returns html for moon-icon according to moonphase value and currentTheme setting
@@ -1063,16 +1108,20 @@ function show_forcast_alert(data, forecast_provider) {
         if (data['alerts'][0]['response'][0]) {
             for (i = 0; i < data['alerts'][0]['response'].length; i++) {
                 //forecast_alert_title = data['alerts'][0]['response'][i]['details']['name'];
+                /*
                 forecast_alert_title = aeris_coded_alerts(data['alerts'][0]['response'][i]['details']['type']);
                 if (typeof forecast_alert_title === "undefined") {
                     // If the type can't be decoded then use the raw name in the alert. I have seen this for "Hurricane Local Statement" not matching a coded weather value
                     forecast_alert_title = data['alerts'][0]['response'][i]['details']['name'];
                 }
+                */
+                forecast_alert_title = "$obs.label.forecast_alert_title: " + data['alerts'][0]['response'][i]['details']['name'];
                 forecast_alert_body = data['alerts'][0]['response'][i]['details']['body'].replace(/\n/g, '<br>');
                 //forecast_alert_link = data['alerts'][0]['response'][i]['details']['name'];
                 forecast_alert_link = data['alerts'][0]['response'][i]['details']['type'];
+                forecast_alert_begins = tzAdjustedMoment(data['alerts'][0]['response'][i]['timestamps']['begins']).format('$obs.label.time_forecast_alert_expires');
                 forecast_alert_expires = tzAdjustedMoment(data['alerts'][0]['response'][i]['timestamps']['expires']).format('$obs.label.time_forecast_alert_expires');
-                forecast_alerts.push({"title": forecast_alert_title, "body": forecast_alert_body, "link": forecast_alert_link, "expires": forecast_alert_expires});
+                forecast_alerts.push({"title": forecast_alert_title, "body": forecast_alert_body, "link": forecast_alert_link, "begins": forecast_alert_begins, "expires": forecast_alert_expires});
             }
         }
     }
@@ -1081,7 +1130,7 @@ function show_forcast_alert(data, forecast_provider) {
         belchertown_debug("Forecast: There are " + forecast_alerts.length + " alert(s).");
         for (i = 0; i < forecast_alerts.length; i++) {
 
-            alert_link = "<i class='fa fa-exclamation-triangle'></i> <a href='#forecast-alert-" + i + "' data-toggle='modal' data-target='#forecast-alert-" + i + "'>" + forecast_alerts[i]["title"] + " $obs.label.alert_in_effect " + forecast_alerts[i]["expires"] + "</a><br>";
+            alert_link = "<i class='fa fa-exclamation-triangle'></i> <a href='#forecast-alert-" + i + "' data-toggle='modal' data-target='#forecast-alert-" + i + "'><b>" + forecast_alerts[i]["title"] + "</b>, $obs.label.forecast_alert_begins " + forecast_alerts[i]["begins"] + " $obs.label.forecast_alert_expires " + forecast_alerts[i]["expires"] + "</a><br>";
             jQuery(".wx-stn-alert-text").append(alert_link);
 
             forecast_alert_modal += "<!-- Forecast Alert Modal " + i + " -->";
@@ -1094,6 +1143,7 @@ function show_forcast_alert(data, forecast_provider) {
             forecast_alert_modal += "</div>";
             forecast_alert_modal += "<div class='modal-body'>";
             forecast_alert_modal += forecast_alerts[i]["body"];
+            forecast_alert_modal += "<br><p><small>" + " $obs.label.forecast_alert_begins " + forecast_alerts[i]["begins"] + " $obs.label.forecast_alert_expires " + forecast_alerts[i]["expires"] + "</small></p>";
             forecast_alert_modal += "</div>";
             forecast_alert_modal += "<div class='modal-footer'>";
             forecast_alert_modal += "<button type='button' class='btn btn-primary' data-dismiss='modal'>$obs.label.close</button>";
@@ -1118,7 +1168,7 @@ function aeris_aqi_translate(data) {
     else if (data === "unhealthy") data = "$obs.label.aqi_unhealthy";
     else if (data === "very unhealthy") data = "$obs.label.aqi_very_unhealthy";
     else if (data === "hazardous") data = "$obs.label.aqi_hazardous";
-    else data = "$obs.label.aqi_unknown";
+    //20220312,ho else data = "$obs.label.aqi_unknown";
 
     return data;
 }
@@ -1135,6 +1185,7 @@ function update_forecast_data(data) {
         return;
     } else if (forecast_provider == "aeris") {
         var forecast_subtitle = tzAdjustedMoment(data["timestamp"]).format('$obs.label.time_forecast_last_updated');
+        var forecast_issueTime_dwd = tzAdjustedMoment(data["current"][0]["response"]["obTimestamp"]).format('$obs.label.time_forecast_last_updated');
 
         try {
             var wxicon = get_relative_url() + "/images/" + aeris_icon(data["current"][0]["response"]["ob"]["icon"]) + ".png";
@@ -1154,7 +1205,7 @@ function update_forecast_data(data) {
         if (data["aqi"][0]["success"] && !data["aqi"][0]["error"]) {
             jQuery(".wx-aqi").html(data["aqi"][0]["response"][0]["periods"][0]["aqi"]);
             jQuery(".wx-aqi-category").html(aeris_aqi_translate(data["aqi"][0]["response"][0]["periods"][0]["category"]));
-            if ("$Extras.aqi_location_enabled" === "1") jQuery(".aqi_location_outer").html("<br>" + data["aqi"][0]["response"][0]["place"]["name"]).css('textTransform', 'capitalize');
+            if ("$Extras.aqi_location_enabled" === "1") jQuery(".aqi_location_outer").html("<br>" + '$obs.label.aqi_source, ' + data["aqi"][0]["response"][0]["place"]["name"]).css('textTransform', 'capitalize');
             get_aqi_color(data["aqi"][0]["response"][0]["periods"][0]["aqi"]);
             try {
                 jQuery(".station-observations .aqi").html(data["aqi"][0]["response"][0]["periods"][0]["aqi"]);
@@ -1287,6 +1338,11 @@ function update_forecast_data(data) {
 
                 var forecast_link = '<a href="' + forecast_link_setup + '" target="_blank">$obs.label.daily_forecast</a>';
 
+                //20220227,ho
+                var windDirDEG = data[(forecast_interval)][0]["response"][0]["periods"][i]["windDirDEG"];
+                var windDir = data[(forecast_interval)][0]["response"][0]["periods"][i]["windDir"];
+                var pressureMB = data[(forecast_interval)][0]["response"][0]["periods"][i]["pressureMB"];
+
                 forecast_row.push({
                     "weekday": weekday,
                     "image_url": image_url,
@@ -1299,7 +1355,10 @@ function update_forecast_data(data) {
                     "snow_depth": snow_depth,
                     "snow_unit": snow_unit,
                     "precip": precip,
-                    "forecast_link": forecast_link
+                    "forecast_link": forecast_link,
+                    "windDirDEG": windDirDEG,
+                    "windDir": windDir,
+                    "pressureMB": pressureMB
                 });
             }
 
@@ -1327,7 +1386,7 @@ function update_forecast_data(data) {
                     //  padding = ( ( highTemp - forecast_row[i]["avgTemp"] = offset ) * 100 / ( rangeTemp) ) where 100 ~ max calculated space available for padding 
                     output_html += parseInt((highTemp - forecast_row[i]["avgTemp"] + offset) * 100 / (rangeTemp)) + 'px">';
                     output_html += '<div class="forecast-image">';
-                    output_html += '<img id="icon" src="' + forecast_row[i]["image_url"] + '">';
+                    output_html += '<img id="icon" src="' + forecast_row[i]["image_url"] + '" alt="Vorhersagesymbol ' + forecast_row[i]["weekday"] + '">';
                     output_html += '</div>';
                     output_html += parseFloat(forecast_row[i]["avgTemp"]).toFixed(0) + '&deg;</div>';
                     output_html += '</div>';
@@ -1344,10 +1403,20 @@ function update_forecast_data(data) {
                         output_html += '<i class="wi wi-raindrop wi-rotate-45 rain-no-precip"></i> <span>0%</span>';
                     }
                     output_html += '</div>';
-                    output_html += '<div class="forecast-wind">';
-                    output_html += '<i class="wi wi-strong-wind"></i> <span>' + parseFloat(forecast_row[i]["windSpeed"]).toFixed(0) + '</span>';
-                    //  output_html += '<i class="wi wi-strong-wind"></i> <span>'+ parseFloat( forecast_row[i]["windSpeed"] ).toFixed(0) +'</span> | <span> '+ parseFloat( forecast_row[i]["windGust"] ).toFixed(0) +'$unit.label.windSpeed';        
+
+                    output_html += '<div class="forecast-wind" title="' + '$unit.label.windSpeed' + '">';
+                    //20220225,ho output_html += '<i class="wi wi-strong-wind"></i> <span>' + parseFloat(forecast_row[i]["windSpeed"]).toFixed(0) + '</span>';
+                    output_html += '<i class="wi wi-strong-wind"></i> <span>'+ parseFloat(forecast_row[i]["windSpeed"]).toFixed(0) + '</span>|<span>' + parseFloat(forecast_row[i]["windGust"]).toFixed(0) + '</span>';        
                     output_html += '</div>';
+
+                    output_html += '<div class="forecast-wind">';
+                    output_html += '<i class="wi wi-wind wi-from-n" style="transform:rotate(' + parseFloat(forecast_row[i]["windDirDEG"]).toFixed(0) + 'deg);font-size:30px"></i> <span>' + forecast_row[i]["windDir"] + '</span>';
+                    output_html += '</div>';
+
+                    output_html += '<div class="forecast-pressure" title="' + '$unit.label.barometer' + '">';
+                    output_html += '<i class="wi wi-barometer"></i><span>' + parseFloat(forecast_row[i]["pressureMB"]).toFixed(0) + '</span>';
+                    output_html += '</div>';
+
                     #if $Extras.has_key("forecast_show_daily_forecast_link") and $Extras.forecast_show_daily_forecast_link == '1'
                     output_html += forecast_row[i]["forecast_link"];
                     #end if
@@ -1373,11 +1442,11 @@ function update_forecast_data(data) {
                     output_html += '<span id="weekday">' + forecast_time(i, forecast_interval, forecast_row[i]["weekday"]) + '</span>';
                     output_html += '<br>';
                     output_html += '<div class="forecast-conditions">';
-                    output_html += '<img id="icon" src="' + forecast_row[i]["image_url"] + '">';
+                    output_html += '<img id="icon" src="' + forecast_row[i]["image_url"] + '" alt="Vorhersagesymbol ' + forecast_row[i]["weekday"] + '">';
                     output_html += '<br>';
                     output_html += '<span class="forecast-condition-text">' + forecast_row[i]["condition_text"] + '</span>';
                     output_html += '</div>';
-                    output_html += '<span class="forecast-high">' + parseFloat(forecast_row[i]["maxTemp"]).toFixed(0) + '&deg;</span> | <span class="forecast-low">' + parseFloat(forecast_row[i]["minTemp"]).toFixed(0) + '&deg;</span>';
+                    output_html += '<span class="forecast-high">' + parseFloat(forecast_row[i]["minTemp"]).toFixed(0) + '&deg;</span> | <span class="forecast-low">' + parseFloat(forecast_row[i]["maxTemp"]).toFixed(0) + '&deg;</span>';
                     output_html += '<br>';
                     output_html += '<div class="forecast-precip">';
                     if (forecast_row[i]["snow_depth"] > 0) {
@@ -1390,9 +1459,19 @@ function update_forecast_data(data) {
                         output_html += '<i class="wi wi-raindrop wi-rotate-45 rain-no-precip"></i> <span>0%</span>';
                     }
                     output_html += '</div>';
+
                     output_html += '<div class="forecast-wind">';
-                    output_html += '<i class="wi wi-strong-wind"></i> <span>' + parseFloat(forecast_row[i]["windSpeed"]).toFixed(0) + '</span> | <span> ' + parseFloat(forecast_row[i]["windGust"]).toFixed(0) + '$unit.label.windSpeed';
+                    output_html += '<i class="wi wi-strong-wind"></i> <span>' + parseFloat(forecast_row[i]["windSpeed"]).toFixed(0) + '</span> | <span> ' + parseFloat(forecast_row[i]["windGust"]).toFixed(0) + '$unit.label.windSpeed' + '</span>';
                     output_html += '</div>';
+
+                    output_html += '<div class="forecast-wind">';
+                    output_html += '<i class="wi wi-wind wi-from-n" style="transform:rotate(' + parseFloat(forecast_row[i]["windDirDEG"]).toFixed(0) + 'deg);font-size:30px"></i> <span>' + forecast_row[i]["windDir"] + '</span>';
+                    output_html += '</div>';
+
+                    output_html += '<div class="forecast-pressure">';
+                    output_html += '<i class="wi wi-barometer"></i> <span>' + parseFloat(forecast_row[i]["pressureMB"]).toFixed(0) + '$unit.label.barometer' + '</span>';
+                    output_html += '</div>';
+
                     #if $Extras.has_key("forecast_show_daily_forecast_link") and $Extras.forecast_show_daily_forecast_link == '1'
                     output_html += forecast_row[i]["forecast_link"];
                     #end if
@@ -1413,6 +1492,7 @@ function update_forecast_data(data) {
             }
             // Show the forecast_subtitle
             jQuery(".forecast-subtitle").html("$obs.label.forecast_last_updated " + forecast_subtitle);
+            jQuery(".forecast-issueTime-dwd").html(forecast_issueTime_dwd);
         }
 
 //	End of new composite version of forecast code
@@ -1524,6 +1604,11 @@ var inactive_timestamp = "";
 
 // MQTT connect
 function connect() {
+    #if $Extras.has_key("mqtt_websockets_ssl") and $Extras.mqtt_websockets_ssl == '1'
+    belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host $Extras.mqtt_websockets_port (SSL Enabled)");
+    #else
+    belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host $Extras.mqtt_websockets_port (SSL Disabled)");
+    #end if
     if (reconnect_using_inactive_timestamp) {
             updated = tzAdjustedMoment(inactive_timestamp).format("$obs.label.time_last_updated");
         } else {
@@ -1796,6 +1881,11 @@ function update_current_wx(data) {
         jQuery(".feelslike").html("$obs.label.feels_like: " + parseFloat(parseFloat(data["appTemp_C"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["outTemp"], maximumFractionDigits: unit_rounding_array["outTemp"]}) + " $unit.label.outTemp");
     }
 
+    // THSW Temperature Metric
+    if (data.hasOwnProperty("thswIndex")) {
+        jQuery(".feelslike").html("$obs.label.feels_like: " + parseFloat(parseFloat(data["thswIndex"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["outTemp"], maximumFractionDigits: unit_rounding_array["outTemp"]}) + " $unit.label.outTemp");
+    }
+
     // Wind
     if (data.hasOwnProperty("windDir")) {
         // No toLocaleString() here since there is no float decimal needed.
@@ -1812,6 +1902,10 @@ function update_current_wx(data) {
     // Windspeed Metric
     if (data.hasOwnProperty("windSpeed_kph")) {
         jQuery(".curwindspeed").html(parseFloat(parseFloat(data["windSpeed_kph"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windSpeed"], maximumFractionDigits: unit_rounding_array["windSpeed"]}));
+    }
+    // Windspeed Metric
+    if (data.hasOwnProperty("windSpeed")) {
+        jQuery(".curwindspeed").html(parseFloat(parseFloat(data["windSpeed"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windSpeed"], maximumFractionDigits: unit_rounding_array["windSpeed"]}));
     }
     // Windspeed METRICWX
     if (data.hasOwnProperty("windSpeed_mps")) {
@@ -1842,6 +1936,10 @@ function update_current_wx(data) {
     if (data.hasOwnProperty("windGust_kph")) {
         jQuery(".curwindgust").html(parseFloat(parseFloat(data["windGust_kph"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windGust"], maximumFractionDigits: unit_rounding_array["windGust"]}));
     }
+    // Wind Gust Metric
+    if (data.hasOwnProperty("windGust")) {
+        jQuery(".curwindgust").html(parseFloat(parseFloat(data["windGust"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windGust"], maximumFractionDigits: unit_rounding_array["windGust"]}));
+    }
     // Wind Gust METRICWX
     if (data.hasOwnProperty("windGust_mps")) {
         jQuery(".curwindgust").html(parseFloat(parseFloat(data["windGust_mps"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windGust"], maximumFractionDigits: unit_rounding_array["windGust"]}));
@@ -1862,6 +1960,36 @@ function update_current_wx(data) {
     // Windchill Metric
     if (data.hasOwnProperty("windchill_C")) {
         jQuery(".curwindchill").html(parseFloat(parseFloat(data["windchill_C"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windchill"], maximumFractionDigits: unit_rounding_array["windchill"]}) + "$unit.label.outTemp");
+    }
+
+    // PWS Weiherhammer Airquality
+    if (data.hasOwnProperty("pws_aqi_category")) {
+        change_aqi_label(data["pws_aqi_category"], ".pws-aqi-category");
+        change_aqi_color(data["pws_aqi_category"], ".pws-aqi-category");
+    }
+    if (data.hasOwnProperty("sds011_pm2_5")) {
+        jQuery(".sds011-pm2_5").html(parseFloat(parseFloat(data["sds011_pm2_5"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["sds011_pm2_5"], maximumFractionDigits: unit_rounding_array["sds011_pm2_5"]}) + " $unit.label.sds011_pm2_5");
+    }
+    if (data.hasOwnProperty("pws_aqi_pm2_5_category")) {
+        change_aqi_color(data["pws_aqi_pm2_5_category"], ".pws_aqi_pm2_5_dot", "background-color");
+    }
+    if (data.hasOwnProperty("sds011_pm10_0")) {
+        jQuery(".sds011-pm10_0").html(parseFloat(parseFloat(data["sds011_pm10_0"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["sds011_pm10_0"], maximumFractionDigits: unit_rounding_array["sds011_pm10_0"]}) + " $unit.label.sds011_pm10_0");
+    }
+    if (data.hasOwnProperty("pws_aqi_pm10_0_category")) {
+        change_aqi_color(data["pws_aqi_pm10_0_category"], ".pws_aqi_pm10_0_dot", "background-color");
+    }
+    if (data.hasOwnProperty("uba_o3")) {
+        jQuery(".uba-o3").html(parseFloat(parseFloat(data["uba_o3"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["uba_o3"], maximumFractionDigits: unit_rounding_array["uba_o3"]}) + " $unit.label.uba_o3");
+    }
+    if (data.hasOwnProperty("pws_aqi_o3_category")) {
+        change_aqi_color(data["pws_aqi_o3_category"], ".pws_aqi_o3_dot", "background-color");
+    }
+    if (data.hasOwnProperty("uba_no2")) {
+        jQuery(".uba-no2").html(parseFloat(parseFloat(data["uba_no2"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["uba_no2"], maximumFractionDigits: unit_rounding_array["uba_no2"]}) + " $unit.label.uba_no2");
+    }
+    if (data.hasOwnProperty("pws_aqi_no2_category")) {
+        change_aqi_color(data["pws_aqi_no2_category"], ".pws_aqi_no2_dot", "background-color");
     }
 };
 #end if
@@ -2330,6 +2458,282 @@ function showChart(json_file, prepend_renderTo = false) {
                 this_yAxis = s.yAxis;
 
                 belchertown_debug(options.chart.renderTo + ": " + s.obsType + " is on yAxis " + this_yAxis);
+
+                // yAxis AQI PlotLines PM10
+                // https://github.com/poblabs/weewx-belchertown/issues/682
+                // PM10 Umweltbundesamt LQI levels, labels and colors
+                // https://www.umweltbundesamt.de/berechnungsgrundlagen-luftqualitaetsindex
+                if (s.obsType == "sds011_pm10_0") {
+                    belchertown_debug('yAxis plotLines true');
+
+                    var yAxis_plotlines = [];
+
+                    const eaqi = [{
+                        color: "#50F0E6",
+                        label: "sehr gut",
+                        level: 20
+                    }, {
+                        color: "#50CDAA",
+                        label: "gut",
+                        level: 35
+                    }, {
+                        color: "#F0E641",
+                        label: "m‰ﬂig",
+                        level: 50
+                    }, {
+                        color: "#FF5050",
+                        label: "schlecht",
+                        level: 100
+                    }, {
+                        color: "#960032",
+                        label: "sehr schlecht",
+                        level: 200
+                    }];
+
+                    for (i = 0; i < eaqi.length; i++) {
+                        yAxis_plotlines.push({
+                            color: eaqi[i].color,
+                            value: eaqi[i].level,
+                            label: {
+                                text: eaqi[i].label,
+                                x: 0,
+                                y: 15,
+                                style: {
+                                    color: eaqi[i].color,
+                                    //fontWeight: 'bold'
+                                }
+                            },
+                            width: 1,
+                            dashStyle: 'longdashdot',
+                            zIndex : 3
+                        });
+                    }
+
+                    // Add plotlines to yAxis options
+                    options.yAxis[this_yAxis].plotLines = yAxis_plotlines;
+                    belchertown_debug(yAxis_plotlines);
+                }
+
+                // yAxis AQI PlotLines PM2.5
+                // https://github.com/poblabs/weewx-belchertown/issues/682
+                // PM2.5 LQI levels, labels and colors
+                // https://de.euronews.com/wetter/copernicus-air-quality-index
+                if (s.obsType == "sds011_pm2_5") {
+                    belchertown_debug('yAxis plotLines true');
+
+                    var yAxis_plotlines = [];
+
+                    const eaqi = [{
+                        color: "#50F0E6",
+                        label: "sehr gut",
+                        level: 10
+                    }, {
+                        color: "#50CDAA",
+                        label: "gut",
+                        level: 20
+                    }, {
+                        color: "#F0E641",
+                        label: "m‰ﬂig",
+                        level: 25
+                    }, {
+                        color: "#FF5050",
+                        label: "schlecht",
+                        level: 50
+                    }, {
+                        color: "#960032",
+                        label: "sehr schlecht",
+                        level: 200
+                    }];
+
+                    for (i = 0; i < eaqi.length; i++) {
+                        yAxis_plotlines.push({
+                            color: eaqi[i].color,
+                            value: eaqi[i].level,
+                            label: {
+                                text: eaqi[i].label,
+                                x: 0,
+                                y: 15,
+                                style: {
+                                    color: eaqi[i].color,
+                                    //fontWeight: 'bold'
+                                }
+                            },
+                            width: 1,
+                            dashStyle: 'longdashdot',
+                            zIndex : 3
+                        });
+                    }
+
+                    // Add plotlines to yAxis options
+                    options.yAxis[this_yAxis].plotLines = yAxis_plotlines;
+                    belchertown_debug(yAxis_plotlines);
+                }
+
+                // yAxis AQI PlotLines NO2
+                // https://github.com/poblabs/weewx-belchertown/issues/682
+                // NO2 Umweltbundesamt LQI levels, labels and colors
+                // https://www.umweltbundesamt.de/berechnungsgrundlagen-luftqualitaetsindex
+                if (s.obsType == "uba_no2") {
+                    belchertown_debug('yAxis plotLines true');
+
+                    var yAxis_plotlines = [];
+
+                    const eaqi = [{
+                        color: "#50F0E6",
+                        label: "sehr gut",
+                        level: 20
+                    }, {
+                        color: "#50CDAA",
+                        label: "gut",
+                        level: 40
+                    }, {
+                        color: "#F0E641",
+                        label: "m‰ﬂig",
+                        level: 100
+                    }, {
+                        color: "#FF5050",
+                        label: "schlecht",
+                        level: 200
+                    }, {
+                        color: "#960032",
+                        label: "sehr schlecht",
+                        level: 300
+                    }];
+
+                    for (i = 0; i < eaqi.length; i++) {
+                        yAxis_plotlines.push({
+                            color: eaqi[i].color,
+                            value: eaqi[i].level,
+                            label: {
+                                text: eaqi[i].label,
+                                x: 0,
+                                y: 15,
+                                style: {
+                                    color: eaqi[i].color,
+                                    //fontWeight: 'bold'
+                                }
+                            },
+                            width: 1,
+                            dashStyle: 'longdashdot',
+                            zIndex : 3
+                        });
+                    }
+
+                    // Add plotlines to yAxis options
+                    options.yAxis[this_yAxis].plotLines = yAxis_plotlines;
+                    belchertown_debug(yAxis_plotlines);
+                }
+
+                // yAxis AQI PlotLines O3
+                // https://github.com/poblabs/weewx-belchertown/issues/682
+                // O3 Umweltbundesamt LQI levels, labels and colors
+                // https://www.umweltbundesamt.de/berechnungsgrundlagen-luftqualitaetsindex
+                if (s.obsType == "uba_o3") {
+                    belchertown_debug('yAxis plotLines true');
+
+                    var yAxis_plotlines = [];
+
+                    const eaqi = [{
+                        color: "#50F0E6",
+                        label: "sehr gut",
+                        level: 60
+                    }, {
+                        color: "#50CDAA",
+                        label: "gut",
+                        level: 120
+                    }, {
+                        color: "#F0E641",
+                        label: "m‰ﬂig",
+                        level: 180
+                    }, {
+                        color: "#FF5050",
+                        label: "schlecht",
+                        level: 240
+                    }, {
+                        color: "#960032",
+                        label: "sehr schlecht",
+                        level: 340
+                    }];
+
+                    for (i = 0; i < eaqi.length; i++) {
+                        yAxis_plotlines.push({
+                            color: eaqi[i].color,
+                            value: eaqi[i].level,
+                            label: {
+                                text: eaqi[i].label,
+                                x: 0,
+                                y: 15,
+                                style: {
+                                    color: eaqi[i].color,
+                                    //fontWeight: 'bold'
+                                }
+                            },
+                            width: 1,
+                            dashStyle: 'longdashdot',
+                            zIndex : 3
+                        });
+                    }
+
+                    // Add plotlines to yAxis options
+                    options.yAxis[this_yAxis].plotLines = yAxis_plotlines;
+                    belchertown_debug(yAxis_plotlines);
+                }
+
+                // yAxis AQI PlotLines SO2
+                // https://github.com/poblabs/weewx-belchertown/issues/682
+                // SO2 LQI levels, labels and colors
+                // https://de.euronews.com/wetter/copernicus-air-quality-index
+                if (s.obsType == "aeris_so2") {
+                    belchertown_debug('yAxis plotLines true');
+
+                    var yAxis_plotlines = [];
+
+                    const eaqi = [{
+                        color: "#50F0E6",
+                        label: "sehr gut",
+                        level: 100
+                    }, {
+                        color: "#50CDAA",
+                        label: "gut",
+                        level: 200
+                    }, {
+                        color: "#F0E641",
+                        label: "m‰ﬂig",
+                        level: 350
+                    }, {
+                        color: "#FF5050",
+                        label: "schlecht",
+                        level: 500
+                    }, {
+                        color: "#960032",
+                        label: "sehr schlecht",
+                        level: 1250
+                    }];
+
+                    for (i = 0; i < eaqi.length; i++) {
+                        yAxis_plotlines.push({
+                            color: eaqi[i].color,
+                            value: eaqi[i].level,
+                            label: {
+                                text: eaqi[i].label,
+                                x: 0,
+                                y: 15,
+                                style: {
+                                    color: eaqi[i].color,
+                                    //fontWeight: 'bold'
+                                }
+                            },
+                            width: 1,
+                            dashStyle: 'longdashdot',
+                            zIndex : 3
+                        });
+                    }
+
+                    // Add plotlines to yAxis options
+                    options.yAxis[this_yAxis].plotLines = yAxis_plotlines;
+                    belchertown_debug(yAxis_plotlines);
+                }
+
 
                 // Some charts may require a defined min/max on the yAxis
                 options.yAxis[this_yAxis].min = s.yAxis_min !== "undefined" ? s.yAxis_min : null;
