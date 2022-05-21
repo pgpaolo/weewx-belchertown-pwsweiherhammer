@@ -1463,7 +1463,8 @@ class getData(SearchList):
             elif aqi_category == "hazardous":
                 aqi_category = label_dict["aqi_hazardous"]
             else:
-                aqi_category = label_dict["aqi_unknown"]
+                # aqi_category = label_dict["aqi_unknown"]
+                aqi_category = aqi_category
 
             if (
                 len(data["current"][0]["response"]) > 0
@@ -2537,8 +2538,8 @@ class HighchartsJsonGenerator(weewx.reportengine.ReportGenerator):
                         else:
                             minstamp, maxstamp = TimeSpan(time_ago, timespan.stop)
                     elif time_length == "timespan_specific":
-                        minstamp = line_options.get("timespan_start", None)
-                        maxstamp = line_options.get("timespan_stop", None)
+                        minstamp = int(line_options.get("timespan_start", None))
+                        maxstamp = int(line_options.get("timespan_stop", None))
                         if minstamp is None or maxstamp is None:
                             raise Warning(
                                 "Error trying to create timespan_specific graph. "
