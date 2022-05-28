@@ -216,6 +216,7 @@ files=[('bin/user', ['bin/user/belchertown.py'
                                      'skins/Belchertown/dwd/warn_icons_50x50/warn_icons_frost_2.png',
                                      'skins/Belchertown/dwd/warn_icons_50x50/warn_icons_frost_3.png',
                                      'skins/Belchertown/dwd/warn_icons_50x50/warn_icons_frost_4.png',
+                                     'skins/Belchertown/dwd/warn_icons_50x50/warn_icons_gewitter_pre.png',
                                      'skins/Belchertown/dwd/warn_icons_50x50/warn_icons_gewitter_1.png',
                                      'skins/Belchertown/dwd/warn_icons_50x50/warn_icons_gewitter_2.png',
                                      'skins/Belchertown/dwd/warn_icons_50x50/warn_icons_gewitter_3.png',
