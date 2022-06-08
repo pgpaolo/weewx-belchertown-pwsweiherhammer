@@ -1604,6 +1604,11 @@ var inactive_timestamp = "";
 
 // MQTT connect
 function connect() {
+    #if $Extras.has_key("mqtt_websockets_ssl") and $Extras.mqtt_websockets_ssl == '1'
+    belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host $Extras.mqtt_websockets_port (SSL Enabled)");
+    #else
+    belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host $Extras.mqtt_websockets_port (SSL Disabled)");
+    #end if
     if (reconnect_using_inactive_timestamp) {
             updated = tzAdjustedMoment(inactive_timestamp).format("$obs.label.time_last_updated");
         } else {
@@ -2473,7 +2478,7 @@ function showChart(json_file, prepend_renderTo = false) {
                         level: 35
                     }, {
                         color: "#F0E641",
-                        label: "mäßig",
+                        label: "mÃ¤ÃŸig",
                         level: 50
                     }, {
                         color: "#FF5050",
@@ -2528,7 +2533,7 @@ function showChart(json_file, prepend_renderTo = false) {
                         level: 20
                     }, {
                         color: "#F0E641",
-                        label: "mäßig",
+                        label: "mÃ¤ÃŸig",
                         level: 25
                     }, {
                         color: "#FF5050",
@@ -2583,7 +2588,7 @@ function showChart(json_file, prepend_renderTo = false) {
                         level: 40
                     }, {
                         color: "#F0E641",
-                        label: "mäßig",
+                        label: "mÃ¤ÃŸig",
                         level: 100
                     }, {
                         color: "#FF5050",
@@ -2638,7 +2643,7 @@ function showChart(json_file, prepend_renderTo = false) {
                         level: 120
                     }, {
                         color: "#F0E641",
-                        label: "mäßig",
+                        label: "mÃ¤ÃŸig",
                         level: 180
                     }, {
                         color: "#FF5050",
@@ -2693,7 +2698,7 @@ function showChart(json_file, prepend_renderTo = false) {
                         level: 200
                     }, {
                         color: "#F0E641",
-                        label: "mäßig",
+                        label: "mÃ¤ÃŸig",
                         level: 350
                     }, {
                         color: "#FF5050",
@@ -3040,6 +3045,7 @@ function showChart(json_file, prepend_renderTo = false) {
                 var currentSeries = options.series;
                 var currentSeriesData = options.series[0].data;
                 var range_unit = options.series[0].range_unit;
+                var rounding = options.series[0].rounding;
                 var newSeriesData = [];
                 var currentSeriesColor = options.series[0].color;
                 currentSeriesData.forEach(seriesData => {
@@ -3054,6 +3060,7 @@ function showChart(json_file, prepend_renderTo = false) {
                     data: newSeriesData,
                     obsType: "haysChart",
                     obsUnit: range_unit,
+                    rounding: rounding,
                     color: currentSeriesColor,
                     fillColor: currentSeriesColor,
                     connectEnds: false,
@@ -3185,6 +3192,7 @@ function showChart(json_file, prepend_renderTo = false) {
                 var currentSeries = options.series;
                 var currentSeriesData = options.series[0].data;
                 var range_unit = options.series[0].range_unit;
+                var rounding = options.series[0].rounding;
                 var newSeriesData = [];
                 currentSeriesData.forEach(seriesData => {
                     if (options.series[0].color) {
@@ -3205,7 +3213,8 @@ function showChart(json_file, prepend_renderTo = false) {
                 options.series.push({
                     data: newSeriesData,
                     obsType: "weatherRange",
-                    obsUnit: range_unit
+                    obsUnit: range_unit,
+                    rounding: rounding
                 });
             }
 
