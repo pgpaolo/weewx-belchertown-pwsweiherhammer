@@ -611,7 +611,7 @@ function changeTheme(themeName, toggleOverride = false) {
         sessionStorage.setItem('currentTheme', 'dark');
     } else if (themeName == "light") {
         // Apply light theme
-        #if $radar_html_dark != "None"
+        #if $radar_html != "None"
         jQuery('.radar_image').html('$radar_html');
         #end if
         jQuery('body').addClass("light");
