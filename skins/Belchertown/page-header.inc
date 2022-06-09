@@ -15,11 +15,11 @@
                 <h1>$obs.label.forecast_page_header</h1>
         #else if $page == "graphs"
                 <h1>$obs.label.graphs_page_header</h1>
-		#else if $page == "records"
+        #else if $page == "records"
                 <h1>$obs.label.records_page_header</h1>
-		#else if $page == "reports"
+        #else if $page == "reports"
                 <h1>$obs.label.reports_page_header</h1>
-		#else if $page == "about"
+        #else if $page == "about"
                 <h1>$obs.label.about_page_header</h1>
         #else if $page == "webcam"
                 <h1>$obs.label.webcam_page_header</h1>
@@ -43,3 +43,4 @@
     </div>
     <div class="clear"></div>
 </div>
+
