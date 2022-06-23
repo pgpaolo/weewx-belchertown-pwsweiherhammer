@@ -128,6 +128,16 @@ extension_config = """
            # twitter_hashtags = "weewx #weather"
            # social_share_html = ""
 
+           #--- Kiosk Options ---
+           # radar_html_kiosk = ""
+           # radar_width_kiosk = 490
+           # radar_height_kiosk = 362
+           # mqtt_websockets_host_kiosk = ""
+           # mqtt_websockets_port_kiosk = ""
+           # mqtt_websockets_ssl_kiosk = ""
+           # forecast_interval_hours_kiosk = 24
+           # aqi_enabled_kiosk = 0
+
            #-------------------------------------------------------------
            #---
            #--- python's ConfigObj has a limitation in how it processes
