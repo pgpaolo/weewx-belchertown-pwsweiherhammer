@@ -1248,13 +1248,15 @@ function update_forecast_data(data) {
         var forecast_issueTime_dwd = tzAdjustedMoment(data["current"][0]["response"]["obTimestamp"]).format('$obs.label.time_forecast_last_updated');
 
         try {
-            // 20220624,ho dwd | brightsky | weatherbit | AERIS: metar | conditions
+            // 20220624,ho dwd | brightsky | weatherbit | owm | AERIS: metar | conditions
             if (current_source_selected == "dwd") {
                 var wxicon = get_relative_url() + "/images/" + aeris_icon(data["dwd"][0]["response"]["ob"]["icon"]) + ".png";
             } else if (current_source_selected == "brightsky") {
                 var wxicon = get_relative_url() + "/images/" + aeris_icon(data["brightsky"][0]["response"]["ob"]["icon"]) + ".png";
             } else if (current_source_selected == "weatherbit") {
                 var wxicon = get_relative_url() + "/images/" + aeris_icon(data["weatherbit"][0]["response"]["ob"]["icon"]) + ".png";
+            } else if (current_source_selected == "owm") {
+                var wxicon = get_relative_url() + "/images/" + aeris_icon(data["owm"][0]["response"]["ob"]["icon"]) + ".png";
             } else if (current_source_selected == "metar") {
                 var wxicon = get_relative_url() + "/images/" + aeris_icon(data["metar"][0]["response"]["ob"]["icon"]) + ".png";
             } else if (current_source_selected == "conditions") {
@@ -1268,13 +1270,15 @@ function update_forecast_data(data) {
         
         // Current observation text
         try {
-            // 20220624,ho dwd | brightsky | weatherbit | AERIS: metar | conditions
+            // 20220624,ho dwd | brightsky | weatherbit | owm | AERIS: metar | conditions
             if (current_source_selected == "dwd") {
                 jQuery(".current-obs-text").html(aeris_coded_weather(data["dwd"][0]["response"]["ob"]["weatherPrimaryCoded"], true));
             } else if (current_source_selected == "brightsky") {
                 jQuery(".current-obs-text").html(aeris_coded_weather(data["brightsky"][0]["response"]["ob"]["weatherPrimaryCoded"]));
             } else if (current_source_selected == "weatherbit") {
                 jQuery(".current-obs-text").html(aeris_coded_weather(data["weatherbit"][0]["response"]["ob"]["weatherPrimaryCoded"]));
+            } else if (current_source_selected == "owm") {
+                jQuery(".current-obs-text").html(aeris_coded_weather(data["owm"][0]["response"]["ob"]["weatherPrimaryCoded"]));
             } else if (current_source_selected == "metar") {
                 jQuery(".current-obs-text").html(aeris_coded_weather(data["metar"][0]["response"]["ob"]["weatherPrimaryCoded"], true));
             } else if (current_source_selected == "conditions") {
@@ -1313,13 +1317,15 @@ function update_forecast_data(data) {
         try {
             if (("$Extras.forecast_units" == "si") || ("$Extras.forecast_units" == "ca")) {
                 // si and ca = kilometer
-                // 20220624,ho dwd | brightsky | weatherbit | AERIS: metar | conditions
+                // 20220624,ho dwd | brightsky | weatherbit | owm | AERIS: metar | conditions
                 if (current_source_selected == "dwd") {
                     visibility = data["dwd"][0]["response"]["ob"]["visibilityKM"];
                 } else if (current_source_selected == "brightsky") {
                     visibility = data["brightsky"][0]["response"]["ob"]["visibilityKM"];
                 } else if (current_source_selected == "weatherbit") {
                     visibility = data["weatherbit"][0]["response"]["ob"]["visibilityKM"];
+                } else if (current_source_selected == "owm") {
+                    visibility = data["owm"][0]["response"]["ob"]["visibilityKM"];
                 } else if (current_source_selected == "metar") {
                     visibility = data["metar"][0]["response"]["ob"]["visibilityKM"];
                 } else if (current_source_selected == "conditions") {
@@ -1348,13 +1354,15 @@ function update_forecast_data(data) {
         try {
             if (("$Extras.forecast_units" == "si") || ("$Extras.forecast_units" == "ca")) {
                 // si and ca = kilometer
-                // 20220624,ho dwd | brightsky | weatherbit | AERIS: metar | conditions
+                // 20220624,ho dwd | brightsky | weatherbit | owm | AERIS: metar | conditions
                 if (current_source_selected == "dwd") {
                     cloud_cover = data["dwd"][0]["response"]["ob"]["sky"];
                 } else if (current_source_selected == "brightsky") {
                     cloud_cover = data["brightsky"][0]["response"]["ob"]["sky"];
                 } else if (current_source_selected == "weatherbit") {
                     cloud_cover = data["weatherbit"][0]["response"]["ob"]["sky"];
+                } else if (current_source_selected == "owm") {
+                    cloud_cover = data["owm"][0]["response"]["ob"]["sky"];
                 } else if (current_source_selected == "metar") {
                     cloud_cover = data["metar"][0]["response"]["ob"]["sky"];
                 } else if (current_source_selected == "conditions") {
@@ -2114,7 +2122,7 @@ function update_current_wx(data) {
 
     // Daily Windrun Metric PWS Weiherhammer
     if (data.hasOwnProperty("dayWindrun")) {
-        jQuery(".dailywindrun").html("$obs.label.windrun " + parseFloat(parseFloat(data["dayWindrun"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windrun"], maximumFractionDigits: unit_rounding_array["windrun"]}) + "$unit.label.windrun");
+        jQuery(".dailywindrun").html("$obs.label.windrun: " + parseFloat(parseFloat(data["dayWindrun"])).toLocaleString("$system_locale_js", {minimumFractionDigits: unit_rounding_array["windrun"], maximumFractionDigits: unit_rounding_array["windrun"]}) + "$unit.label.windrun");
     }
 
     // PWS Weiherhammer Airquality
