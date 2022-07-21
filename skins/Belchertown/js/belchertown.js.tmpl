@@ -2169,7 +2169,7 @@ function update_current_wx(data) {
     }
     // current Sunshine Symbol
     if (data.hasOwnProperty("sunshine")) {
-        sun_output = ''
+        var sun_output = ''
         if (parseInt(data["sunshine"]) > 0) {
             sun_output += '<i class="fa fa-sun-o"></i><sup>1</sup> '
         }
@@ -2179,16 +2179,16 @@ function update_current_wx(data) {
        jQuery(".current-sunshine-symbol").html(sun_output);
     }
     // avg10m Symbols
-    avg10m_output = '';
+    var avg10m_output = '';
     if ((data.hasOwnProperty("radiation")) && (parseFloat(data["radiation"]) > 20.0)) {
         if (data.hasOwnProperty("sunshine_avg10m")) {
-            sunshine_avg10m = parseFloat(data["sunshine_avg10m"]);
-            if ((sunshine_avg10m > 0.0) && (sunshine_avg10m < 1.0)) {
-                avg10m_output = '<i class="wi wi-day-cloudy"></i>';
-            } else if (sunshine_avg10m = 0.0) {
+            var sunshine_avg10m = parseFloat(data["sunshine_avg10m"]).toFixed(2);
+            if (sunshine_avg10m == 0.0) {
                 avg10m_output = '<i class="wi wi-cloudy"></i>';
-            } else if (sunshine_avg10m = 1.0) {
+            } else if (sunshine_avg10m == 1.0) {
                 avg10m_output = '<i class="wi wi-day-sunny"></i>';
+            } else if ((sunshine_avg10m > 0.0) && (sunshine_avg10m < 1.0)) {
+                avg10m_output = '<i class="wi wi-day-cloudy"></i>';
             }
         }
     }
