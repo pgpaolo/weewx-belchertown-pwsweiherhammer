@@ -27,7 +27,7 @@
 #end if
 
 #if $obs.label.html_title != "" 
-    #if $page == "home" or $page == "kiosk"
+    #if $page == "home" or $page == "kiosk" or $page == "console"
         #set $head_title = $obs.label.html_title
     #else if $page == "forecast"
         #set $head_title = $obs.label.html_title_forecast
@@ -53,7 +53,7 @@
 #end if
 
 #if $obs.label.html_description != "" 
-    #if $page == "home" or $page == "kiosk"
+    #if $page == "home" or $page == "kiosk" or $page == "console"
         #set $head_desc = $obs.label.html_description
     #else if $page == "forecast"
         #set $head_desc = $obs.label.html_description_forecast
@@ -79,7 +79,7 @@
 #end if
 
 ## Setup the relative URLs. Use . for homepage and .. for anything in a subfolder. 
-#if $page == "home" or $page == "kiosk"
+#if $page == "home" or $page == "kiosk" or $page == "console"
 #set global $relative_url = "."
 #set $pws_url = $station.station_url
 #else
@@ -134,6 +134,9 @@
         #if $page == "kiosk"
         <link rel='stylesheet' href='$relative_url/kiosk.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownKioskStyle" />
         #end if
+        #if $page == "console"
+        <link rel='stylesheet' href='$relative_url/console.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownConsoleStyle" />
+        #end if
         #if $custom_css_exists
         <link rel='stylesheet' href='$relative_url/custom.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownCustomStyle" />
         #end if
@@ -160,7 +163,7 @@
         <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
         <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
-        #if $page == "pi" or $page == "home" or $page == "kiosk" and $Extras.has_key("mqtt_websockets_enabled") and $Extras.mqtt_websockets_enabled == '1'
+        #if $page == "pi" or $page == "home" or $page == "kiosk" or $page == "console" and $Extras.has_key("mqtt_websockets_enabled") and $Extras.mqtt_websockets_enabled == '1'
         <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
         #end if
         #if $page != "kiosk"
@@ -210,7 +213,7 @@
                 
         <link rel="icon" href="$relative_url/favicon.ico" />
         
-        #if $Extras.has_key('googleAnalyticsId') and $page != "kiosk"
+        #if $Extras.has_key('googleAnalyticsId') and $page != "kiosk" and $page != "console"
         <!-- Global Site Tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=$Extras.googleAnalyticsId"></script>
         <script>
@@ -221,7 +224,7 @@
         </script>
         #end if
 
-        #if os.path.exists("header.inc") and $page != "kiosk"
+        #if os.path.exists("header.inc") and $page != "kiosk" and $page != "console"
         #include "header.inc"
         #end if
 
@@ -233,7 +236,7 @@
     #else
     <body class="page-template-default page full-width-content $bodyTheme" itemscope itemtype="https://schema.org/WebPage">
         <div class="site-container">
-        #if $page != "kiosk"
+        #if $page != "kiosk" and $page != "console"
             <header class="site-header">
                 <div class="wrap">
                     <div class="title-area">

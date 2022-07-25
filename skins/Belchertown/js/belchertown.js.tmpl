@@ -1797,6 +1797,27 @@ function connect() {
         #end if
         client = new Paho.Client("$Extras.mqtt_websockets_host", $Extras.mqtt_websockets_port, mqttclient);
     }
+    #elif $Extras.has_key("mqtt_websockets_host_console") and $Extras.mqtt_websockets_host_console != ""
+    if (pageName == "console.html") {
+        #if $Extras.has_key("mqtt_websockets_ssl_console") and $Extras.mqtt_websockets_ssl_console == '1'
+        belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host_console $mqtt_websockets_port_console (SSL Enabled)");
+        var useSSL = true;
+        #else
+        belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host_console $mqtt_websockets_port_console (SSL Disabled)");
+        var useSSL = false;
+        #end if
+        client = new Paho.Client("$Extras.mqtt_websockets_host_console", $mqtt_websockets_port_console, mqttclient);
+    }
+    else {
+        #if $Extras.has_key("mqtt_websockets_ssl") and $Extras.mqtt_websockets_ssl == '1'
+        belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host $Extras.mqtt_websockets_port (SSL Enabled)");
+        var useSSL = true;
+        #else
+        belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host $Extras.mqtt_websockets_port (SSL Disabled)");
+        var useSSL = false;
+        #end if
+        client = new Paho.Client("$Extras.mqtt_websockets_host", $Extras.mqtt_websockets_port, mqttclient);
+    }
     #else
     #if $Extras.has_key("mqtt_websockets_ssl") and $Extras.mqtt_websockets_ssl == '1'
     belchertown_debug("MQTT: Connecting to MQTT Websockets: $Extras.mqtt_websockets_host $Extras.mqtt_websockets_port (SSL Enabled)");
@@ -1851,7 +1872,7 @@ function onConnect() {
     if (getURLvar("stayconnected") && (getURLvar("stayconnected") == "true" || getURLvar("stayconnected") == "1")) {
         belchertown_debug("MQTT: stayconnected URL var found: ignoring disconnect_live_website_visitor value");
     } else {
-        if  (pageName == "pi" || pageName == "kiosk.html") {
+        if  (pageName == "pi" || pageName == "kiosk.html" || pageName == "console.html") {
             belchertown_debug("MQTT: ignoring disconnect_live_website_visitor value for page: " + pageName);
         }
         else {
@@ -1942,7 +1963,7 @@ function update_current_wx(data) {
     if (data.hasOwnProperty("interval_minute")) {
         // Delays are recommended to allow the other skins to complete processing
         belchertown_debug("MQTT: MQTT message indicates this is an archive interval.");
-        if (pageName == "pi" || pageName == "kiosk.html") {
+        if (pageName == "pi" || pageName == "kiosk.html" || pageName == "console.html") {
             belchertown_debug("Skipping chart update for page " + pageName + ", no charts to be updated.");
         }
         else {
