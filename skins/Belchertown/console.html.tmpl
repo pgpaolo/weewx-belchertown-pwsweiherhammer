@@ -368,10 +368,13 @@
                         </div>
                     </div>
                     
-                    <!-- Radar image -->
-                    <div class="col-lg-5 radar-map toprow-height">
-                        $radar_html_console
-                    </div>
+                    ##<!-- Radar image -->
+                    ##<div class="col-lg-5 radar-map toprow-height">
+                    ##    $radar_html_console
+                    ##</div>
+                    <!-- Console Chart -->
+                    <script type='text/javascript'>showChart("console");</script>
+                    <div class="col-lg-5 consoleTemperatureChart" id="TemperatureChart"></div>
                 </div>
                 <!-- End of first row -->
                 
@@ -462,4 +465,4 @@
         </main>
     </div>
 
-    #include "footer.html.tmpl" 
+    ##include "footer.html.tmpl" 
