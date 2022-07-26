@@ -131,17 +131,17 @@
         <link rel='stylesheet' href='//stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css' type='text/css' media='all' />
         <link rel='stylesheet' href='$relative_url/style.min.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownStyle" />
         <link rel='stylesheet' href='$relative_url/belchertown-dark.min.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownDarkStyle" />
+        #if $custom_css_exists
+        <link rel='stylesheet' href='$relative_url/custom.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownCustomStyle" />
+        #end if
         #if $page == "kiosk"
         <link rel='stylesheet' href='$relative_url/kiosk.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownKioskStyle" />
         #end if
         #if $page == "console"
         <link rel='stylesheet' href='$relative_url/console.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownConsoleStyle" />
         #end if
-        #if $custom_css_exists
-        <link rel='stylesheet' href='$relative_url/custom.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownCustomStyle" />
-        #end if
 
-        #if $page == "forecast"
+        #if $page == "forecast" or $page == "console"
         <!-- Forecast Page - add wind icon css -->
         <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons-wind.min.css' type='text/css' media='all' />
         ##<!-- Forecast Page - add DWD Meteogramm Stylesheet -->

@@ -11,6 +11,32 @@
 
 /* html{overflow:hidden;} */
 
+.wx-stn-info-container {
+    width: 100%;
+    border-bottom: 1px solid #D7D7D7;
+    padding-bottom: 0px;
+}
+
+.forecast-title {
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 5px;
+    padding-right: 0!important;
+}
+
+.forecast-day {
+    min-height: 150px;
+}
+
+.forecast-conditions {
+    min-height: 170px;
+}
+
+.forecast-conditions-1hour {
+    min-height: 70px;
+    word-wrap:break-word;
+}
+
 .consoleTemperatureChart {
     padding-top:10px
 }
@@ -22,28 +48,19 @@
     margin-bottom: 10px;
 }
 .site-footer {
-  padding: 15px 0;
+    padding: 15px 0;
 }
 
 .sun-moon-title {
-  padding-bottom: 8px;
-}
-
-.forecast-conditions {
-	min-height:150px;
-}
-
-.forecast-conditions-1hour {
-	min-height:144px;
-    word-wrap:break-word;
+    padding-bottom: 8px;
 }
 
 .moon {
-	text-align:left;
+    text-align:left;
 }
 
-.forecast-day {
-    min-height: 225px;
+.current_wind, .dark .current_wind {
+    padding: 15px 0px 0px 0px !important;
 }
 
 @media only screen and (max-width: 800px) {
