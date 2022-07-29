@@ -1,2 +1,3 @@
 # weewx-belchertown-pwsweiherhammer
-WeeWX Belchertown PWS Weiherhammer
+
+Anpassungen WeeWX Belchertown Skin PWS Weiherhammer
