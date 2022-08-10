@@ -125,12 +125,14 @@
         <link rel='dns-prefetch' href='//stackpath.bootstrapcdn.com' />
         <link rel='dns-prefetch' href='//cdnjs.cloudflare.com' />
 
-        <link rel='stylesheet' href='$relative_url/assets/google/css/roboto.css' type='text/css' media='all' />
-        <link rel="stylesheet" href="$relative_url/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type='text/css' media='all' />
-        <link rel="stylesheet" href="$relative_url/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css" type='text/css' media='all' />
-        <link rel='stylesheet' href='$relative_url/ajax/libs/bootstrap/3.4.1/css/bootstrap.min.css' type='text/css' media='all' />
-
-
+        <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C700&#038;ver=1.0' type='text/css' media='all' />
+        ##<link rel='stylesheet' href='//stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' type='text/css' media='all' />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        ##<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" integrity="sha512-P9vJUXK+LyvAzj8otTOKzdfF1F3UYVl13+F8Fof8/2QNb8Twd6Vb+VD52I7+87tex9UXxnzPgWA3rH96RExA7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        ##<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css?ver=4.7.4' type='text/css' media='all' />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css" integrity="sha512-r/Gan7PMSRovDus++vDS2Ayutc/cSdl268u047n4z+k7GYuR7Hiw71FsT3QQxdKJBVHYttOJ6IGLnlM9IoMToQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel='stylesheet' href='//stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css' type='text/css' media='all' />
+        ##<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" integrity="sha512-rt/SrQ4UNIaGfDyEXZtNcyWvQeOq0QLygHluFQcSjaGB04IxWhal71tKuzP6K8eYXYB6vJV4pHkXcmFGGQ1/0w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel='stylesheet' href='$relative_url/style.min.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownStyle" />
         <link rel='stylesheet' href='$relative_url/belchertown-dark.min.css?ver=#echo int( time.time() ) #' type='text/css' media='all' id="belchertownDarkStyle" />
         #if $custom_css_exists
@@ -145,7 +147,8 @@
 
         #if $page == "forecast" or $page == "console"
         <!-- Forecast Page - add wind icon css -->
-        <link rel="stylesheet" href="$relative_url/ajax/libs/weather-icons/2.0.12/css/weather-icons-wind.min.css" type='text/css' media='all' />
+        ##<link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons-wind.min.css' type='text/css' media='all' />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons-wind.min.css" integrity="sha512-Ydyj0LLrJGMf7yUSU+QxZE4Pu/jVIutpdTOAozUrzZMslo+vLMX64rghLxEs+AKpN+GmnVNgXoeLlMwSqtyjPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         ##<!-- Forecast Page - add DWD Meteogramm Stylesheet -->
         ##<link rel='stylesheet' href='$relative_url/meteogram.v2.0.min.css' type='text/css' media='all' id="meteogrammcss" />
         #end if
@@ -162,17 +165,15 @@
         <!--[if lt IE 9]>
         <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js'></script>
         <![endif]-->
-        ##<script type="text/javascript" src="$relative_url/ajax/libs/jquery/3.6.0/jquery-3.6.0.min.js"</script>
+        ##<script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        ##<script src="$relative_url/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" </script>
+        ##<script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        ##<script src="$relative_url/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"> </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js" integrity="sha512-fFkDTD3GpiLXZBIrfRu0etHZkCdWPkcNy4TjDqI3gQFVfbbDRFG5vV7w3mIeeOCvUY5cEKTUFiTetIsFtWjF1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+        ##<script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.js" integrity="sha512-oqSECbLRRAy3Sq2tJ0RmzbqXHprFS+n7WapvpI1t0V7CtV4vghscIQ8MYoQo6tp4MrJmih4SlOaYuCkPRi3j6A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         #if $page == "pi" or $page == "home" or $page == "kiosk" or $page == "console" and $Extras.has_key("mqtt_websockets_enabled") and $Extras.mqtt_websockets_enabled == '1'
         ##<script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js" integrity="sha512-Y5n0fbohPllOQ21fTwM/h9sQQ/1a1h5KhweGhu2zwD8lAoJnTgVa7NIrFa1bRDIMQHixtyuRV2ubIx+qWbGdDA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        ##<script type='text/javascript' src="$relative_url/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"</script>
         #end if
         #if $page != "kiosk"
         <script type='text/javascript' src='//code.highcharts.com/stock/highstock.js'></script>
@@ -182,7 +183,8 @@
         <script type='text/javascript' src='//code.highcharts.com/modules/solid-gauge.js'></script>
         <script type='text/javascript' src="//code.highcharts.com/modules/accessibility.js"></script>
         #end if
-        <script type='text/javascript' src='$relative_url/ajax/libs/bootstrap/3.4.1/js/bootstrap.min.js'></script>
+        <script type='text/javascript' src='//stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js'></script>
+        ##<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.min.js" integrity="sha512-7rusk8kGPFynZWu26OKbTeI+QPoYchtxsmPeBqkHIEXJxeun4yJ4ISYe7C6sz9wdxeE1Gk3VxsIWgCZTc+vX3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type='text/javascript' src='$relative_url/js/belchertown.js?#echo int( time.time() )#'></script>
         #if $page == "pi"
             #if $Extras.pi_theme == "dark"
