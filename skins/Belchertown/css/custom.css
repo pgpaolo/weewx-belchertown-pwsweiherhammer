@@ -235,6 +235,45 @@ span.highcharts-title {
     background-color: #333;
 }
 
+/* reports */
+
+td.month, td.head, td.year, td.noaa, th.month, th.head, th.year, th.noaa {
+  padding: 2px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.month {
+  border-left-width: 1px;
+  border-right-width: 1px;
+  text-align: center;
+}
+
+.year {
+  border-left-style: none;
+  border-left-width: 4px;
+  text-align: center;
+}
+
+.history-headline {
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 0px;
+    padding-right: 0 !important;
+}
+
+.noaa-headline {
+    text-align: left;
+    font-size: 25px;
+    margin-bottom: 0px;
+    padding-right: 0 !important;
+}
+
+#noaa_contents {
+    width: 100%;
+    margin: 0 auto;
+}
+
 /* sup und sub */
 sup, sub {
    position: relative;
